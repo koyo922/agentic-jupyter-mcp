@@ -12,7 +12,7 @@
 
 A practical VS Code extension that bridges your local Jupyter Notebooks with AI Agents (like Claude Code, Cursor, Antigravity) using the Model Context Protocol (MCP).
 
-> **Note**: If you already have a standalone Jupyter Server running locally, you don't need this extension (Agents can connect to it via HTTP). This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel (where no external Jupyter Server URL exists).
+> **Note**: If you already have a standalone Jupyter Server running locally or remotely, you don't need this extension (Agents can connect to it directly via HTTP). We recommend using standard Jupyter MCP plugins (like `jupyter-mcp` or community Jupyter Server MCPs) for those scenarios. This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel (where no external Jupyter Server URL exists).
 
 ### The Pain Point
 If you've ever asked an AI Agent to write or debug a Jupyter Notebook, you've likely run into these frustrations:
@@ -68,7 +68,7 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 
 这是一个实用的 VS Code 插件，主要作用是通过 Model Context Protocol (MCP) 让 AI Agent（比如 Claude Code, Cursor, Antigravity 等）能够直接操控你本地的 Jupyter Notebook。
 
-> **写在前面**：如果你本地已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
+> **写在前面**：如果你本地或远端已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。对于那种情况，推荐直接使用市面上常见的标准 Jupyter MCP 插件（如 `jupyter-mcp` 等服务端实现）。这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
 
 ### 我们遇到过什么痛点？
 如果你曾经让 AI 帮你写过或者调试过 Jupyter Notebook，你大概率遇到过这些让人头疼的问题：
