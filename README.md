@@ -10,7 +10,7 @@
 
 ## English
 
-A practical VS Code extension that bridges your local Jupyter Notebooks with AI Agents (like Claude Code, Cursor, Antigravity) using the Model Context Protocol (MCP).
+A practical VS Code extension that bridges your local Jupyter Notebook UI Sessions with AI Agents (like the IDE's built-in Cursor, Windsurf, or Antigravity sidebar) using the Model Context Protocol (MCP).
 
 > **Note**: If you already have a standalone Jupyter Server running locally or remotely, you don't need this extension (Agents can connect to it directly via HTTP). We recommend using our sister project **[agentic-jupyter-remote-mcp](https://github.com/koyo922/agentic-jupyter-remote-mcp)** for remote Jupyter servers (which supports WebSocket execution and local sync).
 > 
@@ -72,7 +72,7 @@ Open the Extensions sidebar (`Cmd+Shift+X` or `Ctrl+Shift+X`) in your IDE, searc
 
 ## 中文
 
-这是一个实用的 VS Code 插件，主要作用是通过 Model Context Protocol (MCP) 让 AI Agent（比如 Claude Code, Cursor, Antigravity 等）能够直接操控你本地的 Jupyter Notebook。
+这是一个实用的 VS Code 插件，主要作用是通过 Model Context Protocol (MCP) 让 AI Agent（比如 IDE 内置的 Cursor, Windsurf, Antigravity 侧边栏等）能够在 IDE 界面内直接操控你当前正在查看的 Jupyter Notebook 标签页会话。
 
 > **写在前面**：如果你本地或远端已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。对于远端服务器的情况，推荐使用我们的兄弟项目 **[agentic-jupyter-remote-mcp](https://github.com/koyo922/agentic-jupyter-remote-mcp)**。
 > 
