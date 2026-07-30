@@ -2,7 +2,7 @@
   "name": "agentic-jupyter-mcp",
   "displayName": "Agentic Jupyter (MCP)",
   "description": "Seamlessly control local Jupyter Notebooks with AI Agents via MCP",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -13,7 +13,18 @@
     "onNotebook:jupyter-notebook"
   ],
   "main": "./out/extension.js",
-  "contributes": {},
+  "contributes": {
+    "configuration": {
+      "title": "Agentic Jupyter (MCP)",
+      "properties": {
+        "agentic-jupyter-mcp.port": {
+          "type": "number",
+          "default": 41234,
+          "description": "The local port for the MCP bridge server to listen on. If you change this, ensure you pass --port <number> in your MCP client configuration."
+        }
+      }
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --production",
     "compile": "tsc -p ./",

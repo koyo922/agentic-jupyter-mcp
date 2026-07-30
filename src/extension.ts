@@ -27,8 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
-    server.listen(41234, '127.0.0.1', () => {
-        console.log('Jupyter Local MCP bridge listening on http://127.0.0.1:41234');
+const port = vscode.workspace.getConfiguration('agentic-jupyter-mcp').get<number>('port') || 41234;
+
+    server.listen(port, '127.0.0.1', () => {
+        console.log(`Jupyter Local MCP bridge listening on http://127.0.0.1:${port}`);
     });
     
     context.subscriptions.push({

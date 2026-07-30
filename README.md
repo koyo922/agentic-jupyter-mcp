@@ -12,6 +12,8 @@
 
 A practical VS Code extension that bridges your local Jupyter Notebooks with AI Agents (like Claude Code, Cursor, Antigravity) using the Model Context Protocol (MCP).
 
+> **Note**: If you already have a standalone Jupyter Server running locally, you don't need this extension (Agents can connect to it via HTTP). This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel (where no external Jupyter Server URL exists).
+
 ### The Pain Point
 If you've ever asked an AI Agent to write or debug a Jupyter Notebook, you've likely run into these frustrations:
 1. **The Black Box**: The AI starts a headless Jupyter server in the background. You can't see what cells it's running or what the charts/outputs look like until it's finished.
@@ -66,6 +68,8 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 
 这是一个实用的 VS Code 插件，主要作用是通过 Model Context Protocol (MCP) 让 AI Agent（比如 Claude Code, Cursor, Antigravity 等）能够直接操控你本地的 Jupyter Notebook。
 
+> **写在前面**：如果你本地已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
+
 ### 我们遇到过什么痛点？
 如果你曾经让 AI 帮你写过或者调试过 Jupyter Notebook，你大概率遇到过这些让人头疼的问题：
 1. **黑盒运行**：AI 总是在后台悄悄启动一个无头的 Jupyter 服务。它跑了什么单元格、画了什么图表，你在前台完全看不到，只能等它全部跑完。
@@ -112,3 +116,22 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 - **拒绝后台搞事**：AI 的读写操作仅限于你当前肉眼正在查看的 Notebook 页面，不会越界操作。
 - **透明可见**：由于所有的代码修改都会实时反应在你的编辑器中，任何风险代码在你按下运行前都能被直接审查。
 - **本地安全绑定**：MCP 通信端口被严格限制在 `127.0.0.1:41234`，杜绝局域网或外部劫持。
+
+---
+
+## 🤖 For AI Agents (Instructions for the LLM)
+
+**Attention AI Agent:** If you are reading this, you are equipped with the Agentic Jupyter MCP tools. This section tells you how to use them to interact with the user's active Jupyter Notebook.
+
+1. **How to Read**: 
+   - Always start by calling `notebook_list_cells` to get the current state of the notebook, including the `index` and `source` of each cell.
+   - You MUST use the `index` provided by `notebook_list_cells` for any subsequent operations on specific cells.
+2. **How to Write/Edit**:
+   - To edit an existing cell, call `notebook_edit_cell` with the correct `cell_index` and the complete `new_source` code.
+   - To add a new cell, call `notebook_insert_cell` with the `cell_index` where you want the new cell to appear, the `kind` ("code" or "markdown"), and the `source`.
+   - To delete a cell, call `notebook_delete_cell` with the `cell_index`.
+3. **How to Run**:
+   - After you insert or edit a cell, you MUST call `notebook_run_cell` with the `cell_index` to execute it. The user relies on you to run the code you write.
+4. **General Rules**:
+   - The user can see everything you do live in their IDE. Do not write scratch code or destructive commands. 
+   - Ensure you read the output carefully after running a cell (you might need to call `notebook_list_cells` again if the output isn't automatically returned in your context).

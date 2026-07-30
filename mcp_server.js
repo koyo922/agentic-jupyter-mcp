@@ -4,12 +4,22 @@ const { StdioServerTransport } = require("@modelcontextprotocol/sdk/server/stdio
 const { z } = require("zod");
 const http = require("http");
 
+// Parse port from command line arguments (--port 41234)
+let port = 41234;
+const portIndex = process.argv.indexOf('--port');
+if (portIndex > -1 && process.argv.length > portIndex + 1) {
+    const parsedPort = parseInt(process.argv[portIndex + 1], 10);
+    if (!isNaN(parsedPort)) {
+        port = parsedPort;
+    }
+}
+
 // Helper to make requests to the VS Code extension
 function makeRequest(path, data) {
     return new Promise((resolve, reject) => {
         const req = http.request({
             hostname: '127.0.0.1',
-            port: 41234,
+            port: port,
             path: path,
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
@@ -111,8 +121,12 @@ server.tool(
         cell_index: z.number().int().describe("The index of the cell to delete (0-indexed)"),
     },
     async ({ cell_index }) => {
-        const res = await callExtension('/delete_cell', { cell_index });
-        return { content: [{ type: "text", text: JSON.stringify(res, null, 2) }] };
+        try {
+            const result = await makeRequest('/delete_cell', { cell_index });
+            return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+        } catch (e) {
+            return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+        }
     }
 );
 
