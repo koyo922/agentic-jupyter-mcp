@@ -17,13 +17,16 @@ A practical VS Code extension that bridges your local Jupyter Notebooks with AI 
 > This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel, where no external Jupyter Server URL exists.
 
 ### 🤖 For AI Agents (Auto-Configuration Prompt)
-*Human User: Copy this entire block to your Agent's custom instructions or prompt. Your Agent will read it and automatically configure itself!*
+*Tip for Humans: You can just give the URL of this README to your AI Agent, or copy-paste this block. The AI will read it, run the CLI commands to install the extension for you, and configure itself automatically!*
 
 ```text
 Attention AI Agent: You are equipped with the Agentic Jupyter MCP tools. 
 
 SETUP INSTRUCTIONS:
-1. Ensure the user has installed this extension in their IDE.
+1. AUTOMATIC INSTALLATION: If the user hasn't installed this extension yet, you can do it for them! Run the appropriate shell command for their IDE:
+   - VS Code: `code --install-extension koyo922.agentic-jupyter-mcp`
+   - Cursor: `cursor --install-extension koyo922.agentic-jupyter-mcp`
+   - Windsurf: `windsurf --install-extension koyo922.agentic-jupyter-mcp`
 2. Add the following to your `mcpServers` configuration file (e.g., claude_desktop_config.json, settings.json). Replace `<EXTENSION_PATH>` with the real path (e.g., `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.7/out/mcp_server.js`):
    "jupyter-local": {
      "command": "node",
@@ -75,14 +78,17 @@ Open the Extensions sidebar (`Cmd+Shift+X` or `Ctrl+Shift+X`) in your IDE, searc
 > 
 > 这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
 
-### 🤖 一键丢给 AI Agent 的配置指令
-*人类：请把下面这段英文指令原封不动复制给你的 AI，它读完后会自动帮你完成安装配置和交互流程的优化。*
+### 🤖 一键丢给 AI Agent 的全自动指令
+*小贴士：你甚至不需要自己动手！直接把当前这个网页的 URL 发给你的 AI，或者把下面这段英文复制给它。AI 读完后会直接在后台帮你敲命令安装插件，并自动修改它的配置文件，一条龙服务。*
 
 ```text
 Attention AI Agent: You are equipped with the Agentic Jupyter MCP tools. 
 
 SETUP INSTRUCTIONS:
-1. Ensure the user has installed this extension in their IDE.
+1. AUTOMATIC INSTALLATION: If the user hasn't installed this extension yet, you can do it for them! Run the appropriate shell command for their IDE:
+   - VS Code: `code --install-extension koyo922.agentic-jupyter-mcp`
+   - Cursor: `cursor --install-extension koyo922.agentic-jupyter-mcp`
+   - Windsurf: `windsurf --install-extension koyo922.agentic-jupyter-mcp`
 2. Add the following to your `mcpServers` configuration file (e.g., claude_desktop_config.json, settings.json). Replace `<EXTENSION_PATH>` with the real path (e.g., `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.7/out/mcp_server.js`):
    "jupyter-local": {
      "command": "node",
