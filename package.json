@@ -1,0 +1,38 @@
+{
+  "name": "agentic-jupyter-mcp",
+  "displayName": "Agentic Jupyter (MCP)",
+  "description": "Seamlessly control local Jupyter Notebooks with AI Agents via MCP",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onNotebook:jupyter-notebook"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {},
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^2.31.1",
+    "typescript": "^5.0.0"
+  },
+  "publisher": "koyo922",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koyo922/agentic-jupyter-mcp.git"
+  },
+  "icon": "images/logo.png"
+}
