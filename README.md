@@ -12,7 +12,9 @@
 
 A practical VS Code extension that bridges your local Jupyter Notebooks with AI Agents (like Claude Code, Cursor, Antigravity) using the Model Context Protocol (MCP).
 
-> **Note**: If you already have a standalone Jupyter Server running locally or remotely, you don't need this extension (Agents can connect to it directly via HTTP). We recommend using standard Jupyter MCP plugins (like `jupyter-mcp` or community Jupyter Server MCPs) for those scenarios. This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel (where no external Jupyter Server URL exists).
+> **Note**: If you already have a standalone Jupyter Server running locally or remotely, you don't need this extension (Agents can connect to it directly via HTTP). We recommend using standard Jupyter MCP plugins (like [mcp-server-jupyter](https://github.com/modelcontextprotocol/servers/tree/main/src/jupyter) or similar server implementations) for those scenarios. 
+> 
+> This extension is specifically designed for **IDE users** (VS Code / Cursor / Windsurf) who rely on the IDE's built-in IPython kernel, where no external Jupyter Server URL exists.
 
 ### The Pain Point
 If you've ever asked an AI Agent to write or debug a Jupyter Notebook, you've likely run into these frustrations:
@@ -27,12 +29,14 @@ You can sit back and watch the AI insert cells, type code, and click "Run" right
 
 ### Installation
 
-**Method 1: One-Click Install**  
-Click here to open VS Code and install directly:  
-👉 [vscode:extension/koyo922.agentic-jupyter-mcp](vscode:extension/koyo922.agentic-jupyter-mcp)
+**Method 1: One-Click IDE Install**  
+Click the link corresponding to your IDE to install directly:
+- <a href="vscode:extension/koyo922.agentic-jupyter-mcp">👉 Install for VS Code</a>
+- <a href="cursor:extension/koyo922.agentic-jupyter-mcp">👉 Install for Cursor</a>
+- <a href="windsurf:extension/koyo922.agentic-jupyter-mcp">👉 Install for Windsurf</a>
 
 **Method 2: IDE Search**  
-Open the Extensions sidebar (`Cmd+Shift+X` or `Ctrl+Shift+X`) in VS Code or Cursor, search for **Agentic Jupyter**, and click Install.
+Open the Extensions sidebar (`Cmd+Shift+X` or `Ctrl+Shift+X`) in your IDE, search for **Agentic Jupyter**, and click Install.
 
 **Method 3: Web Marketplace**  
 Visit the [VS Code Marketplace page](https://marketplace.visualstudio.com/items?itemName=koyo922.agentic-jupyter-mcp) and click Install.
@@ -46,21 +50,39 @@ Add the following to your AI's `mcpServers` configuration:
 "mcpServers": {
   "jupyter-local": {
     "command": "node",
-    "args": ["<YOUR_EXTENSION_PATH>/out/mcp_server.js"]
+    "args": [
+      "<YOUR_EXTENSION_PATH>/out/mcp_server.js",
+      "--port",
+      "41234"
+    ]
   }
 }
 ```
 
 **How to find `<YOUR_EXTENSION_PATH>`?**
 VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PATH>` with the actual path based on your OS:
-- **Mac/Linux**: `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.3` (Note: replace `0.0.3` with the version you installed)
-- **Windows**: `%USERPROFILE%\.vscode\extensions\koyo922.agentic-jupyter-mcp-0.0.3`
+- **Mac/Linux**: `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.6` (Note: replace `0.0.6` with the version you installed)
+- **Windows**: `%USERPROFILE%\.vscode\extensions\koyo922.agentic-jupyter-mcp-0.0.6`
 - **Cursor Users**: Look in `~/.cursor/extensions/...` instead.
+
+*(Optional) Custom Port*: The bridge runs on port `41234` by default. If you encounter a port conflict, you can change it in your VS Code Settings (`agentic-jupyter-mcp.port`), and then update the `--port` argument in the JSON above to match.
+
+### 🤖 For AI Agents (Instructions for the LLM)
+*Tip: Copy this section to your Agent's custom instructions or prompt so it knows how to drive!*
+
+**Attention AI Agent:** You are equipped with the Agentic Jupyter MCP tools. This tells you how to interact with the user's active Notebook:
+1. **How to Read**: Always start by calling `notebook_list_cells` to get the current state and `index` of each cell.
+2. **How to Write/Edit**:
+   - Call `notebook_edit_cell` with the `cell_index` and complete `new_source` to edit.
+   - Call `notebook_insert_cell` with the `cell_index` (where to insert AT), `kind` ("code" or "markdown"), and `source`.
+   - Call `notebook_delete_cell` with the `cell_index` to delete.
+3. **How to Run**: After inserting or editing a cell, you MUST call `notebook_run_cell` with the `cell_index` to execute it. 
+4. **General Rules**: The user can see everything you do live in their IDE. Do not write scratch code or destructive commands. Ensure you read the output carefully after running.
 
 ### Security
 - **No Background execution**: The AI can only act on the Notebook tab you currently have open in your UI.
 - **Visual Auditing**: Because the AI types in your editor, you see exactly what is being executed *before* and *during* the run. 
-- **Local Proxy Only**: The MCP communication runs strictly on `127.0.0.1:41234`.
+- **Local Proxy Only**: The MCP communication runs strictly on `127.0.0.1`.
 
 ---
 
@@ -68,7 +90,9 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 
 这是一个实用的 VS Code 插件，主要作用是通过 Model Context Protocol (MCP) 让 AI Agent（比如 Claude Code, Cursor, Antigravity 等）能够直接操控你本地的 Jupyter Notebook。
 
-> **写在前面**：如果你本地或远端已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。对于那种情况，推荐直接使用市面上常见的标准 Jupyter MCP 插件（如 `jupyter-mcp` 等服务端实现）。这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
+> **写在前面**：如果你本地或远端已经单独启动了一个完整的 Jupyter Server，你其实不需要这个插件（AI Agent 可以直接通过 URL 连过去）。对于那种情况，推荐直接使用市面上常见的标准 Jupyter MCP 插件（如 [mcp-server-jupyter](https://github.com/modelcontextprotocol/servers/tree/main/src/jupyter) 等服务端实现）。
+> 
+> 这个插件**专为 IDE 环境设计**：在 VS Code 或 Cursor 中，往往没有独立的 Jupyter Server，只有一个运行在内存里的 IPython 动态 Kernel。这时候外部的 AI 侧边栏根本摸不到你的变量状态，才需要用到这个插件。
 
 ### 我们遇到过什么痛点？
 如果你曾经让 AI 帮你写过或者调试过 Jupyter Notebook，你大概率遇到过这些让人头疼的问题：
@@ -84,8 +108,10 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 ### 安装指南
 
 **方式 1：一键唤起 IDE 安装**  
-点击下方链接，直接唤起 VS Code 进行安装：  
-👉 [vscode:extension/koyo922.agentic-jupyter-mcp](vscode:extension/koyo922.agentic-jupyter-mcp)
+点击下方对应你编辑器的专属链接，直接唤起安装：
+- <a href="vscode:extension/koyo922.agentic-jupyter-mcp">👉 一键安装到 VS Code</a>
+- <a href="cursor:extension/koyo922.agentic-jupyter-mcp">👉 一键安装到 Cursor</a>
+- <a href="windsurf:extension/koyo922.agentic-jupyter-mcp">👉 一键安装到 Windsurf</a>
 
 **方式 2：在 IDE 内搜索**  
 在 VS Code 或 Cursor 的插件扩展面板（`Cmd+Shift+X` 或 `Ctrl+Shift+X`）中，直接搜索 **Agentic Jupyter** 并点击安装。
@@ -101,37 +127,36 @@ VS Code installs extensions in your home directory. Replace `<YOUR_EXTENSION_PAT
 "mcpServers": {
   "jupyter-local": {
     "command": "node",
-    "args": ["<你的插件完整路径>/out/mcp_server.js"]
+    "args": [
+      "<你的插件完整路径>/out/mcp_server.js",
+      "--port",
+      "41234"
+    ]
   }
 }
 ```
 
 **如何找到 `<你的插件完整路径>`？**
 插件通常安装在用户目录下的 `.vscode/extensions/` 文件夹中。请根据你的系统替换以下路径（注意修改最后的版本号匹配你实际下载的版本）：
-- **Mac / Linux**: `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.3`
-- **Windows**: `%USERPROFILE%\.vscode\extensions\koyo922.agentic-jupyter-mcp-0.0.3`
+- **Mac / Linux**: `~/.vscode/extensions/koyo922.agentic-jupyter-mcp-0.0.6`
+- **Windows**: `%USERPROFILE%\.vscode\extensions\koyo922.agentic-jupyter-mcp-0.0.6`
 - **如果你使用的是 Cursor**: 路径则在 `~/.cursor/extensions/...` 下面。
+
+*（可选）端口配置*：如果你的 41234 端口被占用了，你可以在 VS Code 的设置界面中搜索 `agentic-jupyter-mcp.port` 自定义一个新端口，同时记得把上面 JSON 里的 `--port` 参数也改成对应的新端口。
+
+### 🤖 复制给 AI Agent 的提示词 (Prompt)
+*建议：把这段话直接喂给你的 AI Agent，或者写进它的 Rule 里，它就知道怎么配合插件操作了。*
+
+**Attention AI Agent:** You are equipped with the Agentic Jupyter MCP tools. This tells you how to interact with the user's active Notebook:
+1. **How to Read**: Always start by calling `notebook_list_cells` to get the current state and `index` of each cell.
+2. **How to Write/Edit**:
+   - Call `notebook_edit_cell` with the `cell_index` and complete `new_source` to edit.
+   - Call `notebook_insert_cell` with the `cell_index` (where to insert AT), `kind` ("code" or "markdown"), and `source`.
+   - Call `notebook_delete_cell` with the `cell_index` to delete.
+3. **How to Run**: After inserting or editing a cell, you MUST call `notebook_run_cell` with the `cell_index` to execute it. 
+4. **General Rules**: The user can see everything you do live in their IDE. Do not write scratch code or destructive commands. Ensure you read the output carefully after running.
 
 ### 安全机制
 - **拒绝后台搞事**：AI 的读写操作仅限于你当前肉眼正在查看的 Notebook 页面，不会越界操作。
 - **透明可见**：由于所有的代码修改都会实时反应在你的编辑器中，任何风险代码在你按下运行前都能被直接审查。
-- **本地安全绑定**：MCP 通信端口被严格限制在 `127.0.0.1:41234`，杜绝局域网或外部劫持。
-
----
-
-## 🤖 For AI Agents (Instructions for the LLM)
-
-**Attention AI Agent:** If you are reading this, you are equipped with the Agentic Jupyter MCP tools. This section tells you how to use them to interact with the user's active Jupyter Notebook.
-
-1. **How to Read**: 
-   - Always start by calling `notebook_list_cells` to get the current state of the notebook, including the `index` and `source` of each cell.
-   - You MUST use the `index` provided by `notebook_list_cells` for any subsequent operations on specific cells.
-2. **How to Write/Edit**:
-   - To edit an existing cell, call `notebook_edit_cell` with the correct `cell_index` and the complete `new_source` code.
-   - To add a new cell, call `notebook_insert_cell` with the `cell_index` where you want the new cell to appear, the `kind` ("code" or "markdown"), and the `source`.
-   - To delete a cell, call `notebook_delete_cell` with the `cell_index`.
-3. **How to Run**:
-   - After you insert or edit a cell, you MUST call `notebook_run_cell` with the `cell_index` to execute it. The user relies on you to run the code you write.
-4. **General Rules**:
-   - The user can see everything you do live in their IDE. Do not write scratch code or destructive commands. 
-   - Ensure you read the output carefully after running a cell (you might need to call `notebook_list_cells` again if the output isn't automatically returned in your context).
+- **本地安全绑定**：MCP 通信端口被严格限制在 `127.0.0.1`，杜绝局域网或外部劫持。
