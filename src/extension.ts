@@ -98,6 +98,17 @@ async function handleRequest(path: string, data: any): Promise<any> {
         return { success, message: success ? `Inserted cell at ${index}` : `Failed to insert cell` };
     }
 
+    if (path === '/delete_cell') {
+        const index = data.cell_index;
+        if (typeof index !== 'number' || index < 0 || index >= notebook.cellCount) {
+            throw new Error(`Invalid cell index: ${index}`);
+        }
+        const edit = new vscode.WorkspaceEdit();
+        edit.set(notebook.uri, [vscode.NotebookEdit.deleteCells(new vscode.NotebookRange(index, index + 1))]);
+        const success = await vscode.workspace.applyEdit(edit);
+        return { success, message: success ? `Deleted cell at ${index}` : `Failed to delete cell` };
+    }
+
     if (path === '/save') {
         const success = await notebook.save();
         return { success, message: success ? "Saved notebook" : "Failed to save notebook" };

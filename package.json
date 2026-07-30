@@ -2,7 +2,7 @@
   "name": "agentic-jupyter-mcp",
   "displayName": "Agentic Jupyter (MCP)",
   "description": "Seamlessly control local Jupyter Notebooks with AI Agents via MCP",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -15,10 +15,11 @@
   "main": "./out/extension.js",
   "contributes": {},
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run esbuild-base -- --production",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "package": "vsce package"
+    "package": "vsce package",
+    "esbuild-base": "node esbuild.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0"
@@ -27,6 +28,7 @@
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.90.0",
     "@vscode/vsce": "^2.31.1",
+    "esbuild": "^0.28.1",
     "typescript": "^5.0.0"
   },
   "publisher": "koyo922",

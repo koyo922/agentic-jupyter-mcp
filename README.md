@@ -28,7 +28,7 @@ Stop relying on headless background Jupyter Servers! This extension turns your V
 "mcpServers": {
   "jupyter-local": {
     "command": "node",
-    "args": ["<path-to-extension>/mcp_server.js"]
+    "args": ["<path-to-extension>/out/mcp_server.js"]
   }
 }
 ```
@@ -60,7 +60,7 @@ Stop relying on headless background Jupyter Servers! This extension turns your V
 "mcpServers": {
   "jupyter-local": {
     "command": "node",
-    "args": ["<path-to-extension>/mcp_server.js"]
+    "args": ["<path-to-extension>/out/mcp_server.js"]
   }
 }
 ```

@@ -4,3 +4,7 @@ src/**
 .gitignore
 vsc-extension-quickstart.md
 webpack.config.js
+node_modules/**
+mcp_server.js
+esbuild.js
+patch_pkg.py
