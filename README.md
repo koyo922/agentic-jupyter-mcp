@@ -64,7 +64,7 @@ Visit the [VS Code Marketplace page](https://marketplace.visualstudio.com/items?
 Open the Extensions sidebar (`Cmd+Shift+X` or `Ctrl+Shift+X`) in your IDE, search for **Agentic Jupyter**, and click Install.
 
 ### Security
-- **No Background execution**: The AI can only act on the Notebook tab you currently have open in your UI.
+- **No Hidden Background Servers**: The AI acts directly on your open VS Code Notebook tabs. Even if the tab is in the background, you can switch to it and see exactly what the AI has done without relying on a hidden headless server.
 - **Visual Auditing**: Because the AI types in your editor, you see exactly what is being executed *before* and *during* the run. 
 - **Local Proxy Only**: The MCP communication runs strictly on `127.0.0.1`.
 
@@ -126,6 +126,6 @@ USAGE INSTRUCTIONS:
 在 VS Code 或 Cursor 的插件扩展面板（`Cmd+Shift+X` 或 `Ctrl+Shift+X`）中，直接搜索 **Agentic Jupyter** 并点击安装。
 
 ### 安全机制
-- **拒绝后台搞事**：AI 的读写操作仅限于你当前肉眼正在查看的 Notebook 页面，不会越界操作。
+- **拒绝无头后台搞事**：AI 的操作直接基于你当前在 VS Code 中打开的 Notebook 标签页。即使标签页在后台，你也可以随时切换过去查看它插入的单元格和代码，绝不会产生一个你看不见的隐藏独立服务。
 - **透明可见**：由于所有的代码修改都会实时反应在你的编辑器中，任何风险代码在你按下运行前都能被直接审查。
 - **本地安全绑定**：MCP 通信端口被严格限制在 `127.0.0.1`，杜绝局域网或外部劫持。

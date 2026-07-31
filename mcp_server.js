@@ -54,10 +54,12 @@ const server = new McpServer({
 server.tool(
     "notebook_list_cells",
     "List all cells in the active Jupyter notebook",
-    {},
-    async () => {
+    {
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
+    },
+    async ({ notebook_path }) => {
         try {
-            const result = await makeRequest('/list_cells', {});
+            const result = await makeRequest('/list_cells', { notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
@@ -68,10 +70,13 @@ server.tool(
 server.tool(
     "notebook_run_cell",
     "Run a specific cell by index",
-    { cell_index: z.number().describe("0-based index of the cell to run") },
-    async ({ cell_index }) => {
+    { 
+        cell_index: z.number().describe("0-based index of the cell to run"),
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
+    },
+    async ({ cell_index, notebook_path }) => {
         try {
-            const result = await makeRequest('/run_cell', { cell_index });
+            const result = await makeRequest('/run_cell', { cell_index, notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
@@ -84,11 +89,12 @@ server.tool(
     "Edit the source code of a specific cell",
     { 
         cell_index: z.number().describe("0-based index of the cell to edit"),
-        new_source: z.string().describe("New source code for the cell")
+        new_source: z.string().describe("New source code for the cell"),
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
     },
-    async ({ cell_index, new_source }) => {
+    async ({ cell_index, new_source, notebook_path }) => {
         try {
-            const result = await makeRequest('/edit_cell', { cell_index, new_source });
+            const result = await makeRequest('/edit_cell', { cell_index, new_source, notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
@@ -102,11 +108,12 @@ server.tool(
     { 
         cell_index: z.number().describe("0-based index to insert the cell AT"),
         kind: z.enum(["code", "markdown"]).describe("Type of cell"),
-        source: z.string().describe("Source code for the new cell")
+        source: z.string().describe("Source code for the new cell"),
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
     },
-    async ({ cell_index, kind, source }) => {
+    async ({ cell_index, kind, source, notebook_path }) => {
         try {
-            const result = await makeRequest('/insert_cell', { cell_index, kind, source });
+            const result = await makeRequest('/insert_cell', { cell_index, kind, source, notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
@@ -119,10 +126,11 @@ server.tool(
     "Delete a cell at a specific index",
     {
         cell_index: z.number().int().describe("The index of the cell to delete (0-indexed)"),
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
     },
-    async ({ cell_index }) => {
+    async ({ cell_index, notebook_path }) => {
         try {
-            const result = await makeRequest('/delete_cell', { cell_index });
+            const result = await makeRequest('/delete_cell', { cell_index, notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
@@ -133,10 +141,12 @@ server.tool(
 server.tool(
     "notebook_save",
     "Save the active notebook document",
-    {},
-    async () => {
+    {
+        notebook_path: z.string().optional().describe("Absolute path to the notebook file (optional, used if notebook is in background)")
+    },
+    async ({ notebook_path }) => {
         try {
-            const result = await makeRequest('/save', {});
+            const result = await makeRequest('/save', { notebook_path });
             return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (e) {
             return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };

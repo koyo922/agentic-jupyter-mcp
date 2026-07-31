@@ -43,12 +43,28 @@ const port = vscode.workspace.getConfiguration('agentic-jupyter-mcp').get<number
 }
 
 async function handleRequest(path: string, data: any): Promise<any> {
-    const editor = vscode.window.activeNotebookEditor;
-    if (!editor) {
-        throw new Error("No active notebook editor found in VS Code");
+    let notebook: vscode.NotebookDocument | undefined;
+
+    if (data.notebook_path) {
+        const targetUri = vscode.Uri.file(data.notebook_path);
+        notebook = vscode.workspace.notebookDocuments.find(doc => doc.uri.toString() === targetUri.toString());
+        if (!notebook) {
+            try {
+                // Open it in the background if it's closed
+                notebook = await vscode.workspace.openNotebookDocument(targetUri);
+            } catch (err: any) {
+                throw new Error(`Failed to open notebook document at ${data.notebook_path}: ${err.message || String(err)}`);
+            }
+        }
+    }
+    
+    if (!notebook && vscode.window.activeNotebookEditor) {
+        notebook = vscode.window.activeNotebookEditor.notebook;
     }
 
-    const notebook = editor.notebook;
+    if (!notebook) {
+        throw new Error("Notebook not found or not open in VS Code. Please open the notebook first.");
+    }
 
     if (path === '/list_cells') {
         const cells = notebook.getCells().map((cell, index) => ({
@@ -65,6 +81,12 @@ async function handleRequest(path: string, data: any): Promise<any> {
         if (typeof index !== 'number' || index < 0 || index >= notebook.cellCount) {
             throw new Error(`Invalid cell index: ${index}`);
         }
+        
+        // Ensure the notebook is active for execution
+        if (vscode.window.activeNotebookEditor?.notebook.uri.toString() !== notebook.uri.toString()) {
+            await vscode.window.showNotebookDocument(notebook, { preserveFocus: true, preview: false });
+        }
+        
         await vscode.commands.executeCommand('notebook.cell.execute', {
             start: index,
             end: index + 1

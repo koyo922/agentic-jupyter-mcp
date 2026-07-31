@@ -2,7 +2,7 @@
   "name": "agentic-jupyter-mcp",
   "displayName": "Agentic Jupyter (MCP)",
   "description": "Seamlessly control local Jupyter Notebooks with AI Agents via MCP",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "engines": {
     "vscode": "^1.90.0"
   },
